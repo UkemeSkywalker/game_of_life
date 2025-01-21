@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Game of Life</title>
+    <style>
+        .grid {
+            display: grid;
+            gap: 1px;
+            background-color: #ccc;
+            padding: 1px;
+            width: fit-content;
+            margin: 20px auto;
+        }
+        .cell {
+            width: 10px;
+            height: 10px;
+            background-color: white;
+            transition: background-color 0.2s;
+        }
+        .cell.alive {
+            background-color: #000;
+        }
+        .controls {
+            text-align: center;
+            margin: 20px;
+        }
+        button {
+            margin: 0 5px;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button onclick="togglePlay()">Play/Pause</button>
+        <button onclick="step()">Step</button>
+        <button onclick="reset()">Reset</button>
+    </div>
+    <div id="grid" class="grid"></div>
+
+    <script>
+        let grid = [];
+        let isPlaying = false;
+        let intervalId = null;
+        const GRID_WIDTH = 50;
+        const GRID_HEIGHT = 50;
+
+        function createGrid() {
+            const gridElement = document.getElementById('grid');
+            gridElement.style.gridTemplateColumns = `repeat(${GRID_WIDTH}, 10px)`;
+            
+            for (let i = 0; i < GRID_HEIGHT; i++) {
+                for (let j = 0; j < GRID_WIDTH; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.onclick = () => toggleCell(i, j);
+                    gridElement.appendChild(cell);
+                }
+            }
+        }
+
+        function updateDisplay() {
+            const cells = document.getElementsByClassName('cell');
+            for (let i = 0; i < GRID_HEIGHT; i++) {
+                for (let j = 0; j < GRID_WIDTH; j++) {
+                    cells[i * GRID_WIDTH + j].className = 
+                        'cell' + (grid[i][j] ? ' alive' : '');
+                }
+            }
+        }
+
+        function toggleCell(i, j) {
+            grid[i][j] = !grid[i][j];
+            updateDisplay();
+        }
+
+        async function step() {
+            const response = await fetch('/update/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ grid: grid }),
+            });
+            const data = await response.json();
+            grid = data.grid;
+            updateDisplay();
+        }
+
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            if (isPlaying) {
+                intervalId = setInterval(step, 200);
+            } else {
+                clearInterval(intervalId);
+            }
+        }
+
+        async function reset() {
+            const response = await fetch('/new/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    width: GRID_WIDTH, 
+                    height: GRID_HEIGHT 
+                }),
+            });
+            const data = await response.json();
+            grid = data.grid;
+            updateDisplay();
+        }
+
+        // Initialize the game
+        createGrid();
+        reset();
+    </script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Game of Life - Welcome</title>
+    <style>
+        body {
+            background-color: #0a0a0a;
+            color: #33ff33;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .ascii-container {
+            margin-bottom: 50px;
+            position: relative;
+            text-shadow: 0 0 10px #33ff33;
+            animation: glow 2s infinite alternate;
+        }
+        
+        .ascii-art {
+            white-space: pre;
+            font-size: 16px;
+            text-align: center;
+            font-weight: bold;
+            line-height: 1.2;
+            letter-spacing: 2px;
+            transform: scale(1.2);
+        }
+        
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px #33ff33, 0 0 20px #33ff33, 0 0 30px #33ff33;
+            }
+            to {
+                text-shadow: 0 0 20px #33ff33, 0 0 30px #33ff33, 0 0 40px #33ff33;
+            }
+        }
+        
+        .start-button {
+            padding: 20px 40px;
+            font-size: 24px;
+            background-color: #33ff33;
+            color: #000;
+            border: none;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 3px;
+            box-shadow: 0 0 20px #33ff33;
+        }
+        
+        .start-button:hover {
+            background-color: #000;
+            color: #33ff33;
+            border: 2px solid #33ff33;
+            transform: scale(1.1);
+            box-shadow: 0 0 30px #33ff33;
+        }
+
+        .start-button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(51, 255, 51, 0.2) 0%,
+                rgba(51, 255, 51, 0.1) 50%,
+                transparent 100%
+            );
+            transform: rotate(45deg);
+            animation: shine 2s infinite;
+        }
+
+        @keyframes shine {
+            from {
+                transform: rotate(45deg) translateY(-100%);
+            }
+            to {
+                transform: rotate(45deg) translateY(100%);
+            }
+        }
+
+        .background-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(to right, #0f0f0f 1px, transparent 1px),
+                linear-gradient(to bottom, #0f0f0f 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.2;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-grid"></div>
+    <div class="ascii-container">
+        <div class="ascii-art">
+ ██████╗  █████╗ ███╗   ███╗███████╗     ██████╗ ███████╗    ██╗     ██╗███████╗███████╗
+██╔════╝ ██╔══██╗████╗ ████║██╔════╝    ██╔═══██╗██╔════╝    ██║     ██║██╔════╝██╔════╝
+██║  ███╗███████║██╔████╔██║█████╗      ██║   ██║█████╗      ██║     ██║█████╗  █████╗  
+██║   ██║██╔══██║██║╚██╔╝██║██╔══╝      ██║   ██║██╔══╝      ██║     ██║██╔══╝  ██╔══╝  
+╚██████╔╝██║  ██║██║ ╚═╝ ██║███████╗    ╚██████╔╝██║         ███████╗██║██║     ███████╗
+ ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝     ╚═════╝ ╚═╝         ╚══════╝╚═╝╚═╝     ╚══════╝</div>
+    </div>
+    <a href="/game" class="start-button">START GAME</a>
+    
+    <script>
+        // Add some random cell animations in the background
+        function createRandomCell() {
+            const cell = document.createElement('div');
+            cell.style.position = 'absolute';
+            cell.style.width = '2px';
+            cell.style.height = '2px';
+            cell.style.backgroundColor = '#33ff33';
+            cell.style.opacity = '0.5';
+            cell.style.left = Math.random() * 100 + 'vw';
+            cell.style.top = Math.random() * 100 + 'vh';
+            document.body.appendChild(cell);
+            
+            setTimeout(() => {
+                cell.remove();
+            }, 2000);
+        }
+        
+        setInterval(createRandomCell, 100);
+    </script>
+</body>
+</html
