@@ -8,8 +8,10 @@ from .models import GameState
 def landing(request):
     return render(request, 'life/landing.html')
 
+
 def game(request):
-    return render(request, 'life/game.html')
+    pattern = request.GET.get('pattern', 'random')
+    return render(request, 'life/game.html', {'pattern': pattern})
 
 def select_pattern(request):
     return render(request, 'life/select_pattern.html')
@@ -54,14 +56,72 @@ def update_grid(request):
     
     return JsonResponse({'error': 'Invalid request method'})
 
+# @csrf_exempt
+# def new_grid(request):
+#     if request.method == 'POST':
+#         data = json.loads(request.body)
+#         width = data.get('width', 50)
+#         height = data.get('height', 50)
+#         grid = initialize_grid(width, height)
+#         return JsonResponse({'grid': grid})
+    
+#     return JsonResponse({'error': 'Invalid request method'})
+
+
+def initialize_grid_with_pattern(pattern_name, width=50, height=50):
+    # Define patterns
+    patterns = {
+        'flower': [
+            [0, 1, 0],
+            [1, 1, 1],
+            [0, 1, 0]
+        ],
+        'glider': [
+            [0, 1, 0],
+            [0, 0, 1],
+            [1, 1, 1]
+        ],
+        'pulsar': [
+            [0, 1, 1, 1, 0],
+            [1, 0, 0, 0, 1],
+            [1, 0, 0, 0, 1],
+            [1, 0, 0, 0, 1],
+            [0, 1, 1, 1, 0]
+        ]
+    }
+
+    # Create empty grid
+    grid = [[0 for _ in range(width)] for _ in range(height)]
+    
+    if pattern_name in patterns:
+        pattern = patterns[pattern_name]
+        # Calculate center position to place pattern
+        start_row = height // 2 - len(pattern) // 2
+        start_col = width // 2 - len(pattern[0]) // 2
+        
+        # Place pattern in center of grid
+        for i in range(len(pattern)):
+            for j in range(len(pattern[0])):
+                grid[start_row + i][start_col + j] = pattern[i][j]
+    
+    return grid
+
 @csrf_exempt
 def new_grid(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         width = data.get('width', 50)
         height = data.get('height', 50)
-        grid = initialize_grid(width, height)
+        pattern = data.get('pattern', 'random')
+        
+        if pattern == 'random':
+            grid = initialize_grid(width, height)
+        else:
+            grid = initialize_grid_with_pattern(pattern, width, height)
+            
         return JsonResponse({'grid': grid})
     
     return JsonResponse({'error': 'Invalid request method'})
+
+
 
