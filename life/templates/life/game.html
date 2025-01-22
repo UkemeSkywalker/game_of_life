@@ -3,34 +3,81 @@
 <head>
     <title>Game of Life</title>
     <style>
+        body {
+            background-color: #0a0a0a;
+            color: #33ff33;
+            font-family: 'Courier New', monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
         .grid {
             display: grid;
             gap: 1px;
-            background-color: #ccc;
+            background-color: #1a1a1a;
             padding: 1px;
             width: fit-content;
             margin: 20px auto;
+            box-shadow: 0 0 20px rgba(51, 255, 51, 0.2);
         }
+
         .cell {
             width: 10px;
             height: 10px;
-            background-color: white;
+            background-color: #0a0a0a;
             transition: background-color 0.2s;
         }
+
         .cell.alive {
-            background-color: #000;
+            background-color: #33ff33;
+            box-shadow: 0 0 5px #33ff33;
         }
+
         .controls {
             text-align: center;
             margin: 20px;
         }
+
         button {
             margin: 0 5px;
-            padding: 5px 10px;
+            padding: 10px 20px;
+            font-family: 'Courier New', monospace;
+            background-color: #0a0a0a;
+            color: #33ff33;
+            border: 1px solid #33ff33;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover {
+            background-color: #33ff33;
+            color: #0a0a0a;
+            box-shadow: 0 0 10px #33ff33;
+        }
+        
+        .background-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(to right, #0f0f0f 1px, transparent 1px),
+                linear-gradient(to bottom, #0f0f0f 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.2;
+            z-index: -1;
         }
     </style>
 </head>
 <body>
+    <div class="background-grid"></div>
     <div class="controls">
         <button onclick="togglePlay()">Play/Pause</button>
         <button onclick="step()">Step</button>

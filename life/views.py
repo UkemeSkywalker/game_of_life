@@ -9,8 +9,10 @@ def landing(request):
     return render(request, 'life/landing.html')
 
 def game(request):
-    
     return render(request, 'life/game.html')
+
+def select_pattern(request):
+    return render(request, 'life/select_pattern.html')
 
 def initialize_grid(width=50, height=50):
     return np.random.choice([0, 1], size=(height, width), p=[0.85, 0.15]).tolist()
@@ -62,3 +64,4 @@ def new_grid(request):
         return JsonResponse({'grid': grid})
     
     return JsonResponse({'error': 'Invalid request method'})
+
