@@ -91,10 +91,6 @@
         let intervalId = null;
         const GRID_WIDTH = 50;
         const GRID_HEIGHT = 50;
-        
-        // Get the pattern from the URL if it exists
-        const urlParams = new URLSearchParams(window.location.search);
-        const selectedPattern = urlParams.get('pattern') || 'random';
 
         function createGrid() {
             const gridElement = document.getElementById('grid');
@@ -155,15 +151,13 @@
                 },
                 body: JSON.stringify({ 
                     width: GRID_WIDTH, 
-                    height: GRID_HEIGHT,
-                    pattern: selectedPattern
+                    height: GRID_HEIGHT 
                 }),
             });
             const data = await response.json();
             grid = data.grid;
             updateDisplay();
         }
-
 
         // Initialize the game
         createGrid();
